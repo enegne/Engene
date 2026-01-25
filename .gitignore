@@ -50,3 +50,6 @@ test-output/
 
 # Ignore local environment overrides
 local.properties
+
+
+.docs/
