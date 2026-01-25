@@ -24,7 +24,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     api("com.badlogicgames.gdx:gdx:1.13.5")
     implementation "com.badlogicgames.ashley:ashley:1.7.3"
-
+// Source: https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-box2d
+    api("com.badlogicgames.gdx:gdx-box2d:1.13.5")
 }
 
 
