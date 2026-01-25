@@ -79,7 +79,7 @@ javadoc {
     options.links = [
             'https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/'
     ]
-    destinationDir = file("${projectDir}/docs/javadoc")
+    destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
 }
 
 
