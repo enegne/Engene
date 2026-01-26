@@ -32,4 +32,6 @@ for more info check the documentation (that for now don't exist lmao)
 ## Disclaimer 
 This library is in development status, so is really unstable, use at your own risk. 
 
-
+## How contribute 
+just create a fork!
+Discord: https://discord.gg/KSBP3HH33F
