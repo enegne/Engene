@@ -1,5 +1,6 @@
 package org.gattolfo.engen.component.render;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
@@ -47,7 +48,7 @@ public class SpriteRenderable implements Renderable {
      * @param deltaTime the time elapsed since the last frame, in seconds
      */
     @Override
-    public void render(SpriteBatch batch, TransformComponent transform, float deltaTime) {
+    public void render(Camera camera, SpriteBatch batch, TransformComponent transform, float deltaTime) {
         transform.updateWorldTransformIfNeeded();
         sprite.setOriginCenter();
         sprite.setCenter(transform.getWorldPosition().x, transform.getWorldPosition().y);
@@ -56,5 +57,10 @@ public class SpriteRenderable implements Renderable {
         sprite.setScale(transform.getWorldScale().x, transform.getWorldScale().y);
 
         sprite.draw(batch);
+    }
+
+    @Override
+    public int getBatchIndex() {
+        return 1;
     }
 }

@@ -1,5 +1,6 @@
 package org.gattolfo.engen.component.render;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.gattolfo.engen.component.TransformComponent;
@@ -18,11 +19,16 @@ public class UIRenderable implements Renderable, Resizable {
 
 
     @Override
-    public void render(SpriteBatch batch, TransformComponent transform, float deltaTime) {
+    public void render(Camera camera, SpriteBatch batch, TransformComponent transform, float deltaTime) {
         stage.getRoot().setPosition(transform.getWorldPosition().x, transform.getWorldPosition().y);
         stage.act(deltaTime);
         stage.draw();
 
+    }
+
+    @Override
+    public int getBatchIndex() {
+        return 1;
     }
 
     public Stage getStage() {

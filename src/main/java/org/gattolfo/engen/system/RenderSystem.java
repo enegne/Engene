@@ -13,20 +13,22 @@ public class RenderSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     private final Array<Entity> sortedEntities = new Array<>();
     private final OrthographicCamera camera;
-    private final SpriteBatch batch;
+    private final SpriteBatch[] batches;
 
     private final ComponentMapper<RenderComponent> rm = ComponentMapper.getFor(RenderComponent.class);
     private final ComponentMapper<TransformComponent> tm = ComponentMapper.getFor(TransformComponent.class);
     public RenderSystem(final OrthographicCamera camera, final SpriteBatch batch) {
-        super(Priority.RENDER); // puoi aggiungere priorità qui se vuoi
-        this.batch = batch;
-        this.camera = camera;
+        this(camera,batch,Priority.RENDER);
     }
 
-    public RenderSystem(final SpriteBatch batch, final OrthographicCamera camera, int priority) {
-        super(priority); // puoi aggiungere priorità qui se vuoi
-        this.batch = batch;
+    public RenderSystem(final OrthographicCamera camera, final SpriteBatch batch, int priority) {
+        this(camera, new SpriteBatch[]{null, batch}, priority);
+    }
+
+    public RenderSystem(final OrthographicCamera camera, final SpriteBatch[] batches, int priority) {
+        super(priority);
         this.camera = camera;
+        this.batches = batches;
     }
     @Override
     public void addedToEngine(Engine engine) {
@@ -35,7 +37,7 @@ public class RenderSystem extends EntitySystem {
 
     @Override
     public void update(float deltaTime) {
-        //camera.updafte();
+        camera.update();
 
         sortedEntities.clear();
         sortedEntities.addAll(entities.toArray(Entity.class));
@@ -51,18 +53,38 @@ public class RenderSystem extends EntitySystem {
 
             return Float.compare(za, zb); // low Z = behind, high Z = front
         });
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
+        for(int i=1;i< batches.length;i++)
+            batches[i].setProjectionMatrix(camera.combined);
+
+
+        int currentBatchIndex = -1;
+        boolean batchIsOpen = false;
+
 
         for (Entity entity : sortedEntities) {
             RenderComponent render = rm.get(entity);
             TransformComponent transform = tm.get(entity);
+            int requiredBatchIndex = render.renderable.getBatchIndex();
 
-            transform.updateWorldTransformIfNeeded(); // already done, but safe
+            if(requiredBatchIndex!= currentBatchIndex){
+                if (batchIsOpen && currentBatchIndex > 0 && batches[currentBatchIndex] != null) {
+                    batches[currentBatchIndex].end();
+                    batchIsOpen = false;
+                }
 
-            render.renderable.render(batch,transform,deltaTime);
+                currentBatchIndex = requiredBatchIndex;
+
+                if (currentBatchIndex > 0 && batches[currentBatchIndex] != null) {
+                    batches[currentBatchIndex].begin();
+                    batchIsOpen = true;
+                }
+
+
+            }
+            render.renderable.render(camera, batches[requiredBatchIndex], transform, deltaTime);
         }
-
-        batch.end();
+        if (batchIsOpen && currentBatchIndex > 0 && batches[currentBatchIndex] != null) {
+            batches[currentBatchIndex].end();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.gattolfo.engen.component.render;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.gattolfo.engen.component.TransformComponent;
 
@@ -30,5 +31,8 @@ public interface Renderable {
      * @param deltaTime the time elapsed since the last frame, in seconds, used for animations
      *                  or other time-dependent computations during rendering.
      */
-    void render(SpriteBatch batch, TransformComponent transform, float deltaTime);
+    void render(Camera camera, SpriteBatch batch, TransformComponent transform, float deltaTime);
+
+    public int getBatchIndex();
+
 }

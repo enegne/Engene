@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import org.gattolfo.engen.component.TransformComponent;
+import com.badlogic.gdx.graphics.Camera;
 
 /**
  * A class responsible for rendering animations in a 2D game environment.
@@ -112,7 +113,7 @@ public class AnimationRenderable implements Renderable {
      * @param deltaTime  the time elapsed (in seconds) since the last frame, used to update animation timing.
      */
     @Override
-    public void render(SpriteBatch batch, TransformComponent transform, float deltaTime) {
+    public void render(Camera camera, SpriteBatch batch, TransformComponent transform, float deltaTime) {
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = animation.getKeyFrame(stateTime);
 
@@ -139,5 +140,10 @@ public class AnimationRenderable implements Renderable {
                 rotation                  // rotation in degrees,
         );
 
+    }
+
+    @Override
+    public int getBatchIndex() {
+        return 1;
     }
 }
