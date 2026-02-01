@@ -27,7 +27,7 @@ Then you can build and add entities:
     e.add(transform);
 ```
 
-for more info check the documentation (that for now don't exist lmao)
+for more info check the documentation [here](https://github.com/enegne/Engene/wiki)
 
 ## Disclaimer 
 This library is in development status, so is really unstable, use at your own risk. 
