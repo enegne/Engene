@@ -33,7 +33,7 @@ public class Engene    {
         scenes = new HashMap<>();
     }
 
-    public Engene get_instance(){
+    public static Engene get_instance(){
         if(INSTANCE==null)
             INSTANCE = new Engene();
 
