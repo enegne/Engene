@@ -3,11 +3,15 @@ package org.gattolfo.engen;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.gattolfo.engen.updater.Resizable;
 import org.gattolfo.engen.updater.ResizeUpdater;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -15,53 +19,62 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Engene    {
 
+    private AssetManager assetManager;
+
+    private static Engene INSTANCE;
 
 
-
-    private Engine engine;
-
-
-    private final ResizeUpdater resizeUpdater;
+    private Scene currentScene;
+    private Map<String, Scene> scenes;
 
 
-
-
-
-    public Engene(){
-        engine = new Engine();
-        resizeUpdater = new ResizeUpdater();
+    private Engene(){
+        assetManager = new AssetManager();
+        scenes = new HashMap<>();
     }
 
+    public Engene get_instance(){
+        if(INSTANCE==null)
+            INSTANCE = new Engene();
 
-    public void addEntity(@NotNull Entity entity){
-        engine.addEntity(entity);
+        return INSTANCE;
     }
 
-    public void removeEntity(@NotNull Entity entity){
-        engine.removeEntity(entity);
+    public void registerScene(String name, Scene scene) {
+        scenes.put(name, scene);
     }
 
-    public void addSystem(@NotNull EntitySystem system){
-        engine.addSystem(system);
+    public void setScene(String name) {
+        if (currentScene != null) {
+            currentScene.hide();
+            currentScene.unloadAssets(assetManager);
+        }
 
-    }
-
-    public void removeSystem(@NotNull EntitySystem system){
-        engine.removeSystem(system);
+        currentScene = scenes.get(name);
+        if (currentScene != null) {
+            currentScene.loadAssets(assetManager);
+            assetManager.finishLoading(); // O usa loading asincrono
+            currentScene.show();
+        }
     }
 
 
     public void update(float delta){
-        engine.update(delta);
+        if (currentScene != null) {
+            currentScene.update(delta);
+        }
     }
 
-    public ResizeUpdater getResizeUpdater(){
-        return  resizeUpdater;
+    public AssetManager getAssetManager() {
+        return assetManager;
     }
 
-
-    public void resize(int width, int height){
-        resizeUpdater.start_resizing(width,height);
+    public void dispose() {
+        for (Scene scene : scenes.values()) {
+            scene.dispose();
+        }
+        assetManager.dispose();
     }
+
 
 }
