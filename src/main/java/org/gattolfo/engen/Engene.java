@@ -25,7 +25,7 @@ public class Engene    {
 
 
     private Scene currentScene;
-    private Map<String, Scene> scenes;
+    private final Map<String, Scene> scenes;
 
 
     private Engene(){
