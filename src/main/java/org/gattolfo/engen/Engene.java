@@ -76,5 +76,8 @@ public class Engene    {
         assetManager.dispose();
     }
 
+    public void resize(int width,int height){
+        currentScene.resize(width,height);
+    }
 
 }
